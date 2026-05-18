@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Sara coffee - Horizontal Scroll</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* ========== PERBAIKAN BUG SCROLL KE ATAS ========== */
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px; /* Mencegah navbar menutupi konten saat scroll */
+        }
+        
+        body {
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Hapus scroll-behavior dari body (pindah ke html) */
+        body {
+            scroll-behavior: auto;
+        }
+
+        /* ========== TAMBAHAN STYLE UNTUK HORIZONTAL SCROLL ========== */
+        /* Sembunyikan filter bawaan yang lama */
+        .filter-buttons {
+            display: none;
+        }
+
+        /* TAB UTAMA */
+        .menu-main-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+        }
+        .main-tab-btn {
+            background: transparent;
+            border: 2px solid var(--coffee-light);
+            padding: 12px 32px;
+            border-radius: 60px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #3E2A21;
+            font-family: 'Inter', sans-serif;
+        }
+        .main-tab-btn.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+            box-shadow: 0 6px 14px rgba(184, 123, 75, 0.3);
+        }
+        .main-tab-btn:hover {
+            background: var(--coffee-light);
+            border-color: var(--coffee-light);
+            color: white;
+        }
+
+        /* Subkategori dengan horizontal scroll */
+        .subcategory-group {
+            margin-bottom: 3rem;
+        }
+        .subcategory-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1.2rem;
+            border-left: 5px solid var(--accent);
+            padding-left: 1rem;
+        }
+        .subcategory-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            font-family: 'Playfair Display', serif;
+            color: var(--coffee-dark);
+        }
+        .subcategory-scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 28px;
+    padding-bottom: 16px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent) #f1e5d8;
+
+    touch-action: pan-x;
+    overscroll-behavior-y: contain;
+}
+        .subcategory-scroll::-webkit-scrollbar {
+            height: 8px;
+        }
+        .subcategory-scroll::-webkit-scrollbar-track {
+            background: #f1e5d8;
+            border-radius: 10px;
+        }
+        .subcategory-scroll::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 10px;
+        }
+        .subcategory-scroll .menu-card {
+            flex: 0 0 280px;
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+        .subcategory-scroll .menu-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-hover);
+        }
+        .menu-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        .menu-info {
+            padding: 20px;
+        }
+        .menu-name {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .menu-price {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+        .menu-desc {
+            color: #5C4B3A;
+            font-size: 0.85rem;
+            margin: 8px 0 14px;
+            line-height: 1.4;
+        }
+        .order-btn {
+            background: #F4E9DD;
+            border: none;
+            padding: 8px 0;
+            width: 100%;
+            border-radius: 40px;
+            font-weight: 600;
+            color: var(--coffee-dark);
+            transition: 0.2s;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .order-btn i {
+            font-size: 1rem;
+        }
+        .order-btn:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Animasi scroll reveal */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 576px) {
+            .subcategory-scroll .menu-card {
+                flex: 0 0 260px;
+            }
+            .subcategory-title {
+                font-size: 1.5rem;
+            }
+            .main-tab-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+            html {
+                scroll-padding-top: 70px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            html {
+                scroll-padding-top: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo"><img src="foto/log.jpeg" alt=""><span>SARA COFFE</span></div>
+    <div class="menu-toggle" id="mobile-menu">
+        <i class="fas fa-bars" style="color: var(--coffee-light);"></i>
+    </div>
+    <ul class="nav-links" id="nav-links">
+        <li><a href="#home">Beranda</a></li>
+        <li><a href="#menu">Menu</a></li>
+        <li><a href="#about">Tentang</a></li>
+        <li><a href="#gallery">Galeri</a></li>
+        <li><a href="#contact">Kontak</a></li>
+    </ul>
+</nav>
+
+<!-- Hero Section -->
+<section id="home" class="hero">
+    <div class="container">
+        <div class="hero-content">
+            <h1 class="hero-title">Sara Coffe • Setiap Rasa Ada Cerita</h1>
+            <p class="hero-sub">Nikmati secangkir kebahagiaan dengan biji kopi pilihan</p>
+            <a href="#menu" class="btn-primary">Menu Kami</a>
+            <a href="#contact" class="btn-outline" style="margin-left: 16px;">Kunjungi Kami</a>
+        </div>
+    </div>
+</section>
+
+<!-- Menu Section dengan Horizontal Scroll -->
+<section id="menu">
+    <div class="container">
+        <h2 class="section-title scroll-reveal">Menu Spesial Kami</h2>
+        
+        <div class="menu-main-tabs scroll-reveal">
+            <button class="main-tab-btn active" data-tab="drinks">Minuman</button>
+            <button class="main-tab-btn" data-tab="foods">Makanan</button>
+        </div>
+
+        <div id="dynamic-menu-container"></div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section id="about">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-img scroll-reveal">
+                <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?q=80&w=2070&auto=format" alt="Suasana Sara Coffee">
+            </div>
+            <div class="about-text scroll-reveal">
+                <h3>Cerita di Balik Setiap Cangkir</h3>
+                <p>Sara Coffee berdiri sejak 2021 dengan semangat menghadirkan pengalaman ngopi yang estetik namun tetap autentik. Kami percaya bahwa kopi bukan sekadar minuman, melainkan ruang untuk berbagi cerita dan inspirasi.</p>
+                <p>Setiap biji kopi kami pilih langsung dari petani lokal dan diproses dengan teknik modern yang menjaga cita rasa asli. Temani harimu dengan aroma khas dan interior instagramable yang nyaman.</p>
+                <p><i class="fas fa-mug-hot" style="color: #B87B4B;"></i> <strong>Open Daily:</strong> 08.00 - 22.00 WIB</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="gallery">
+    <div class="container">
+        <h2 class="section-title scroll-reveal">Galeri Suasana</h2>
+        <div class="gallery-grid">
+            <div class="gallery-item scroll-reveal"><img src="https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?q=80&w=1974&auto=format" alt="interior coffee"></div>
+            <div class="gallery-item scroll-reveal"><img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=2070&auto=format" alt="coffee art"></div>
+            <div class="gallery-item scroll-reveal"><img src="https://images.unsplash.com/photo-1507133750040-4a8f57021571?q=80&w=2029&auto=format" alt="fresh pastry"></div>
+            <div class="gallery-item scroll-reveal"><img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?q=80&w=2070&auto=format" alt="outdoor seating"></div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contact">
+    <div class="container">
+        <h2 class="section-title scroll-reveal">Kunjungi & Reservasi</h2>
+        <div class="contact-wrapper scroll-reveal">
+            <div class="contact-info">
+                <h3><i class="fas fa-store"></i> Sara Coffe</h3>
+                <div class="info-detail"><i class="fas fa-map-marker-alt"></i>Jl. Kresek Gandaria, Kec. Kresek</div>
+                <div class="info-detail"><i class="fas fa-clock"></i> Senin - Minggu : 08.00 - 22.00 WIB</div>
+                <div class="info-detail"><i class="fab fa-whatsapp"></i><a href="https://wa.me/083896425197" target="_blank"> +62 83896425197</a></div>
+                <div class="info-detail"><i class="fab fa-instagram"></i><a href="https://www.instagram.com/saracoffe.id?igsh=NjNpbnd2bG9hYnQ5" target="_blank"> @saracoffe.id</a></div>
+                <div class="info-detail"><i class="fab fa-tiktok"></i><a href="https://www.tiktok.com/@saracoffe3?_r=1&_t=ZS-96T4Xuk5Zpp" target="_blank"> @saracoffe3</a></div>
+                <p style="margin-top: 20px;"><i class="fas fa-heart" style="color:#B87B4B;"></i> Pesan via WhatsApp langsung kami proses!</p>
+            </div>
+            <div class="map"><iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1650.4241474018595!2d106.37933760846038!3d-6.13337769198829!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e41f90039ceebb5%3A0x165e087002eb6125!2sCAFE%20SARA%20COFFE!5e1!3m2!1sid!2sid!4v1779118203065!5m2!1sid!2sid" width="400" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2025 Sara Coffee — Setiap rasa ada cerita</p>
+    <div class="social-links" style="justify-content: center;">
+        <a href="https://www.instagram.com/saracoffe.id" target="_blank"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#" id="whatsapp-icon"><i class="fab fa-whatsapp"></i></a>
+    </div>
+</footer>
+
+<script>
+    // Data Menu lengkap
+    const fullMenuData = {
+        coffee: [
+            { id: 1, name: "Espresso Blend", price: "Rp 25.000", desc: "Kopi hitam pekat dengan aroma kuat, robusta & arabika pilihan.", img: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?q=80&w=2070&auto=format" },
+            { id: 2, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "https://images.unsplash.com/photo-1570968915860-54d5c92fa5f4?q=80&w=1964&auto=format" },
+            { id: 3, name: "Vanilla Cold Brew", price: "Rp 29.000", desc: "Cold brew 18 jam dengan sentuhan vanilla alami.", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=2070&auto=format" },
+            { id: 4, name: "Hazelnut Macchiato", price: "Rp 34.000", desc: "Espresso + busa susu dengan sirup hazelnut manis.", img: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?q=80&w=1974&auto=format" },
+            { id: 5, name: "Irish Cream Coffee", price: "Rp 36.000", desc: "Perpaduan krim Irlandia, espresso, dan topping krim.", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1974&auto=format" },
+            { id: 6, name: "Cinnamon Roll Latte", price: "Rp 33.000", desc: "Latte dengan sentuhan kayu manis dan krim.", img: "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=1974&auto=format" }
+        ],
+        noncoffee: [
+            { id: 7, name: "Matcha Latte", price: "Rp 33.000", desc: "Matcha premium Jepang, creamy dan menyegarkan.", img: "https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?q=80&w=1974&auto=format" },
+            { id: 8, name: "Chocolate Bliss", price: "Rp 28.000", desc: "Coklat hitam + susu hangat, topping whipped cream.", img: "https://images.unsplash.com/photo-1541288893979-4f1f7b9e2b8c?q=80&w=1974&auto=format" },
+            { id: 9, name: "Lemon Mint Tea", price: "Rp 23.000", desc: "Teh lemon segar dengan daun mint, es batu.", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=1973&auto=format" },
+            { id: 10, name: "Strawberry Milkshake", price: "Rp 31.000", desc: "Susu segar, stroberi asli, topping whipped cream.", img: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?q=80&w=1974&auto=format" },
+            { id: 11, name: "Taro Creamy", price: "Rp 27.000", desc: "Minuman ubi ungu dengan tekstur lembut.", img: "https://images.unsplash.com/photo-1572491234115-acc5f7e6b7b8?q=80&w=1974&auto=format" },
+            { id: 12, name: "Vanilla Chai Tea", price: "Rp 29.000", desc: "Teh chai hangat dengan vanila dan rempah.", img: "https://images.unsplash.com/photo-1542596768-5d1e1f6b6f8d?q=80&w=1974&auto=format" }
+        ],
+        snack: [
+            { id: 13, name: "Cheese Croissant", price: "Rp 27.000", desc: "Pastry renyah dengan isian keju creamy.", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1926&auto=format" },
+            { id: 14, name: "French Fries Truffle", price: "Rp 32.000", desc: "Kentang goreng dengan taburan truffle salt.", img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=80&w=1974&auto=format" },
+            { id: 15, name: "Spicy Nachos", price: "Rp 35.000", desc: "Nachos dengan saus keju pedas dan salsa.", img: "https://images.unsplash.com/photo-1513456852971-30c0b8199ebe?q=80&w=1974&auto=format" },
+            { id: 16, name: "Chicken Popcorn", price: "Rp 29.000", desc: "Potongan ayam gurih dengan saus sambal matah.", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=1974&auto=format" },
+            { id: 17, name: "Mozzarella Sticks", price: "Rp 34.000", desc: "Stik mozzarella goreng dengan saus marinara.", img: "https://images.unsplash.com/photo-1628260412299-a337ff6502b0?q=80&w=1974&auto=format" }
+        ],
+        maincourse: [
+            { id: 18, name: "Avocado Toast", price: "Rp 42.000", desc: "Roti sourdough, alpukat, sunny side up.", img: "https://images.unsplash.com/photo-1603046891744-1f76eb10c1a2?q=80&w=2070&auto=format" },
+            { id: 19, name: "Chicken Basil Pasta", price: "Rp 48.000", desc: "Spaghetti dengan ayam panggang, kemangi, dan saus krim.", img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1974&auto=format" },
+            { id: 20, name: "Nasi Goreng Pedas", price: "Rp 45.000", desc: "Nasi goreng dengan ayam suwir, telur mata sapi.", img: "https://images.unsplash.com/photo-1604907972745-e0a6fc19e7e6?q=80&w=1974&auto=format" },
+            { id: 21, name: "Beef Burger", price: "Rp 55.000", desc: "Burger daging sapi, keju leleh, saus spesial.", img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1974&auto=format" },
+            { id: 22, name: "Grilled Salmon Rice Bowl", price: "Rp 68.000", desc: "Salmon panggang, nasi hangat, sayuran segar.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1974&auto=format" },
+            { id: 23, name: "Chicken Katsu Don", price: "Rp 52.000", desc: "Nasi dengan ayam katsu, telur, dan saus khas.", img: "https://images.unsplash.com/photo-1626668893632-6f1a39c6c7c9?q=80&w=1974&auto=format" }
+        ],
+        dessert: [
+            { id: 24, name: "Classic Tiramisu", price: "Rp 39.000", desc: "Ladyfinger, mascarpone, kopi bubuk klasik.", img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=1964&auto=format" },
+            { id: 25, name: "Chocolate Lava Cake", price: "Rp 42.000", desc: "Cake coklat dengan lelehan coklat di dalam.", img: "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?q=80&w=1974&auto=format" },
+            { id: 26, name: "New York Cheesecake", price: "Rp 38.000", desc: "Cheesecake lembut dengan saus berry.", img: "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?q=80&w=1974&auto=format" },
+            { id: 27, name: "Pancake Madu", price: "Rp 35.000", desc: "Pancake lembut dengan madu dan butter.", img: "https://images.unsplash.com/photo-1528207776546-365bb710ee93?q=80&w=1974&auto=format" },
+            { id: 28, name: "Red Velvet Cake", price: "Rp 41.000", desc: "Kue red velvet dengan krim keju.", img: "https://images.unsplash.com/photo-1614707267537-b85a2e4c2b5d?q=80&w=1974&auto=format" }
+        ]
+    };
+
+    const whatsappNumber = "6283896425197";
+
+    function orderViaWhatsApp(itemName) {
+        const message = `Halo Sara Coffee! Saya ingin memesan *${itemName}*. Apakah tersedia? Saya ingin pickup/delivery. Terima kasih ☕✨`;
+        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function renderCard(item) {
+        return `
+            <div class="menu-card" data-id="${item.id}">
+                <img class="menu-img" src="${item.img}" alt="${item.name}" loading="lazy">
+                <div class="menu-info">
+                    <div class="menu-name">
+                        ${item.name}
+                        <span class="menu-price">${item.price}</span>
+                    </div>
+                    <div class="menu-desc">${item.desc}</div>
+                    <button class="order-btn" data-name="${item.name}">
+                        <i class="fab fa-whatsapp"></i> Pesan via WA
+                    </button>
+                </div>
+            </div>
+        `;
+    }
+
+    function renderSubcategory(categoryKey, items, container) {
+        const titles = {
+            coffee: "☕ Coffee", noncoffee: "🍵 Non Coffee",
+            snack: "🍟 Snack", maincourse: "🍝 Main Course", dessert: "🍰 Dessert"
+        };
+        
+        const itemsHtml = items.map(item => renderCard(item)).join('');
+        
+        const sectionHtml = `
+            <div class="subcategory-group" data-cat="${categoryKey}">
+                <div class="subcategory-header">
+                    <h3 class="subcategory-title">${titles[categoryKey]}</h3>
+                </div>
+                <div class="subcategory-scroll">
+                    ${itemsHtml}
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', sectionHtml);
+    }
+    
+    function attachOrderEvents() {
+        document.querySelectorAll('.order-btn').forEach(btn => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                orderViaWhatsApp(btn.getAttribute('data-name'));
+            };
+        });
+    }
+    
+    function renderFullMenuByTab(tab) {
+        const container = document.getElementById("dynamic-menu-container");
+        if (!container) return;
+        container.innerHTML = "";
+        
+        if (tab === "drinks") {
+            renderSubcategory("coffee", fullMenuData.coffee, container);
+            renderSubcategory("noncoffee", fullMenuData.noncoffee, container);
+        } else if (tab === "foods") {
+            renderSubcategory("snack", fullMenuData.snack, container);
+            renderSubcategory("maincourse", fullMenuData.maincourse, container);
+            renderSubcategory("dessert", fullMenuData.dessert, container);
+        }
+        
+        attachOrderEvents();
+        
+        document.querySelectorAll('.subcategory-group, .menu-card').forEach(el => {
+            if (!el.classList.contains('scroll-reveal')) el.classList.add('scroll-reveal');
+        });
+        observeScrollReveal();
+    }
+    
+    function isElementInViewport(el) {
+        const rect = el.getBoundingClientRect();
+        return rect.top < window.innerHeight - 100;
+    }
+    
+    let scrollObserver = null;
+    function observeScrollReveal() {
+        if (scrollObserver) scrollObserver.disconnect();
+        const revealElements = document.querySelectorAll('.scroll-reveal');
+        scrollObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    scrollObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        revealElements.forEach(el => {
+            if (!el.classList.contains('revealed')) scrollObserver.observe(el);
+        });
+    }
+    
+    function addScrollRevealToExisting() {
+        document.querySelectorAll('.section-title, .about-img, .about-text, .gallery-item, .contact-wrapper, .menu-main-tabs, .hero-content').forEach(el => {
+            if (!el.classList.contains('scroll-reveal')) el.classList.add('scroll-reveal');
+        });
+        observeScrollReveal();
+        setTimeout(() => {
+            document.querySelectorAll('.scroll-reveal').forEach(el => {
+                if (isElementInViewport(el)) el.classList.add('revealed');
+            });
+        }, 200);
+    }
+    
+    function initTabs() {
+        document.querySelectorAll('.main-tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                document.querySelectorAll('.main-tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderFullMenuByTab(tab);
+            });
+        });
+    }
+    
+    function init() {
+        initTabs();
+        renderFullMenuByTab("drinks");
+        addScrollRevealToExisting();
+        
+        const mobileToggle = document.getElementById('mobile-menu');
+        const navLinks = document.getElementById('nav-links');
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => navLinks.classList.toggle('active'));
+        }
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => navLinks.classList.remove('active'));
+        });
+        
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const targetId = this.getAttribute('href');
+                if(targetId === "#" || targetId === "") return;
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    e.preventDefault();
+                    targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+        
+        const waIcon = document.getElementById('whatsapp-icon');
+        if(waIcon) {
+            waIcon.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Halo Sara Coffee! Saya ingin bertanya tentang menu & reservasi. Terima kasih!")}`, '_blank');
+            });
+        }
+    }
+    
+    document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
