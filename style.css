@@ -99,7 +99,7 @@
 
         /* Hero */
         .hero {
-            min-height: 90vh;
+            min-height: 100vh;
             background: linear-gradient(112deg, rgba(62,42,33,0.7) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?q=80&w=2070&auto=format') center/cover no-repeat;
             background-attachment: fixed;
             display: flex;
@@ -511,7 +511,7 @@
             }
             .hero {
                 padding-top: 70px;
-                min-height: 80vh;
+                min-height: 100vh;
             }
             .hero-title {
                 font-size: 1.8rem;
