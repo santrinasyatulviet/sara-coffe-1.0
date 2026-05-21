@@ -88,14 +88,19 @@
     overflow-x: auto;
     overflow-y: hidden;
     gap: 28px;
-    padding-bottom: 16px;
+    padding: 0 16px 16px;
+
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) #f1e5d8;
 
-    touch-action: pan-x;
-    overscroll-behavior-y: contain;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+
+    background-color: var(--coffee-dark);
+}
+
+.subcategory-scroll::-webkit-scrollbar {
+    display: none;
 }
         .subcategory-scroll::-webkit-scrollbar {
             height: 8px;
@@ -109,13 +114,20 @@
             border-radius: 10px;
         }
         .subcategory-scroll .menu-card {
-            flex: 0 0 280px;
-            background: white;
-            border-radius: 28px;
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
-            transition: all 0.3s ease;
-        }
+    flex: 0 0 280px;
+
+    background: white;
+    border-radius: 28px;
+    overflow: hidden;
+
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+
+    scroll-snap-align: start;
+}
         .subcategory-scroll .menu-card:hover {
             transform: translateY(-6px);
             box-shadow: var(--shadow-hover);
@@ -148,6 +160,20 @@
             margin: 8px 0 14px;
             line-height: 1.4;
         }
+        .menu-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  display: flex;
+  gap: 12px;
+
+  touch-action: auto;
+
+  -webkit-overflow-scrolling: touch;
+}
+.menu-scroll::-webkit-scrollbar {
+  display: none;
+}
         .order-btn {
             background: #F4E9DD;
             border: none;
@@ -182,6 +208,51 @@
             transform: translateY(0);
         }
 
+
+        .subcategory-wrapper {
+    position: relative;
+}
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.9);
+    color: var(--coffee-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-size: 1rem;
+    transition: 0.2s;
+}
+
+.scroll-arrow:hover {
+    background: var(--accent);
+    color: white;
+}
+
+.scroll-left {
+    left: 10px;
+}
+
+.scroll-right {
+    right: 10px;
+}
+
+@media (max-width: 768px) {
+    .scroll-arrow {
+        width: 36px;
+        height: 36px;
+        font-size: 0.9rem;
+    }
+}
+
         @media (max-width: 576px) {
             .subcategory-scroll .menu-card {
                 flex: 0 0 260px;
@@ -209,7 +280,7 @@
 
 <!-- Navbar -->
 <nav class="navbar">
-    <div class="logo"><img src="foto/log.jpeg" alt=""><span>SARA COFFE</span></div>
+    <div class="logo"><img src="foto/2.png" alt=""><span>SARA COFFE</span></div>
     <div class="menu-toggle" id="mobile-menu">
         <i class="fas fa-bars" style="color: var(--coffee-light);"></i>
     </div>
@@ -235,7 +306,7 @@
 </section>
 
 <!-- Menu Section dengan Horizontal Scroll -->
-<section id="menu">
+<section id="menu" class="menu">
     <div class="container">
         <h2 class="section-title scroll-reveal">Menu Spesial Kami</h2>
         
@@ -310,35 +381,44 @@
     // Data Menu lengkap
     const fullMenuData = {
         coffee: [
-            { id: 1, name: "Espresso Blend", price: "Rp 25.000", desc: "Kopi hitam pekat dengan aroma kuat, robusta & arabika pilihan.", img: "https://images.unsplash.com/photo-1510707577719-ae7c14805e3a?q=80&w=2070&auto=format" },
-            { id: 2, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "https://images.unsplash.com/photo-1570968915860-54d5c92fa5f4?q=80&w=1964&auto=format" },
-            { id: 3, name: "Vanilla Cold Brew", price: "Rp 29.000", desc: "Cold brew 18 jam dengan sentuhan vanilla alami.", img: "https://images.unsplash.com/photo-1461023058943-07fcbe16d735?q=80&w=2070&auto=format" },
-            { id: 4, name: "Hazelnut Macchiato", price: "Rp 34.000", desc: "Espresso + busa susu dengan sirup hazelnut manis.", img: "https://images.unsplash.com/photo-1485808191679-5f86510681a2?q=80&w=1974&auto=format" },
-            { id: 5, name: "Irish Cream Coffee", price: "Rp 36.000", desc: "Perpaduan krim Irlandia, espresso, dan topping krim.", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=1974&auto=format" },
-            { id: 6, name: "Cinnamon Roll Latte", price: "Rp 33.000", desc: "Latte dengan sentuhan kayu manis dan krim.", img: "https://images.unsplash.com/photo-1574085733277-851d9d856a3a?q=80&w=1974&auto=format" }
+            { id: 1, name: "Espresso Blend", price: "Rp 25.000", desc: "Kopi hitam pekat dengan aroma kuat, robusta & arabika pilihan.", img: "foto/2.png"  },
+            { id: 2, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 3, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 4, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 5, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 6, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 7, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 8, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 9, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 10, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 11, name: "Caramel Latte", price: "Rp 32.000", desc: "Perpaduan espresso, steamed milk, dan caramel sauce manis.", img: "foto/2.png" },
+            { id: 12, name: "Vanilla Cold Brew", price: "Rp 29.000", desc: "Cold brew 18 jam dengan sentuhan vanilla alami.", img: "foto/2.png" },
+            { id: 13, name: "Hazelnut Macchiato", price: "Rp 34.000", desc: "Espresso + busa susu dengan sirup hazelnut manis.", img: "foto/2.png" },
+            { id: 14, name: "Irish Cream Coffee", price: "Rp 36.000", desc: "Perpaduan krim Irlandia, espresso, dan topping krim.", img: "foto/2.png" },
+            { id: 15, name: "Cinnamon Roll Latte", price: "Rp 33.000", desc: "Latte dengan sentuhan kayu manis dan krim.", img: "foto/2.png" }
         ],
         noncoffee: [
-            { id: 7, name: "Matcha Latte", price: "Rp 33.000", desc: "Matcha premium Jepang, creamy dan menyegarkan.", img: "https://images.unsplash.com/photo-1572536147248-ac59a8abfa4b?q=80&w=1974&auto=format" },
-            { id: 8, name: "Chocolate Bliss", price: "Rp 28.000", desc: "Coklat hitam + susu hangat, topping whipped cream.", img: "https://images.unsplash.com/photo-1541288893979-4f1f7b9e2b8c?q=80&w=1974&auto=format" },
-            { id: 9, name: "Lemon Mint Tea", price: "Rp 23.000", desc: "Teh lemon segar dengan daun mint, es batu.", img: "https://images.unsplash.com/photo-1556679343-c7306c1976bc?q=80&w=1973&auto=format" },
-            { id: 10, name: "Strawberry Milkshake", price: "Rp 31.000", desc: "Susu segar, stroberi asli, topping whipped cream.", img: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?q=80&w=1974&auto=format" },
-            { id: 11, name: "Taro Creamy", price: "Rp 27.000", desc: "Minuman ubi ungu dengan tekstur lembut.", img: "https://images.unsplash.com/photo-1572491234115-acc5f7e6b7b8?q=80&w=1974&auto=format" },
-            { id: 12, name: "Vanilla Chai Tea", price: "Rp 29.000", desc: "Teh chai hangat dengan vanila dan rempah.", img: "https://images.unsplash.com/photo-1542596768-5d1e1f6b6f8d?q=80&w=1974&auto=format" }
+            { id: 7, name: "Matcha Latte", price: "Rp 33.000", desc: "Matcha premium Jepang, creamy dan menyegarkan.", img: "foto/2.png" },
+            { id: 8, name: "Chocolate Bliss", price: "Rp 28.000", desc: "Coklat hitam + susu hangat, topping whipped cream.", img: "foto/2.png" },
+            { id: 9, name: "Lemon Mint Tea", price: "Rp 23.000", desc: "Teh lemon segar dengan daun mint, es batu.", img: "foto/2.png"},
+            { id: 10, name: "Strawberry Milkshake", price: "Rp 31.000", desc: "Susu segar, stroberi asli, topping whipped cream.", img: "foto/2.png" },
+            { id: 11, name: "Taro Creamy", price: "Rp 27.000", desc: "Minuman ubi ungu dengan tekstur lembut.", img: "foto/2.png" },
+            { id: 12, name: "Vanilla Chai Tea", price: "Rp 29.000", desc: "Teh chai hangat dengan vanila dan rempah.", img: "foto/2.png" }
         ],
         snack: [
-            { id: 13, name: "Cheese Croissant", price: "Rp 27.000", desc: "Pastry renyah dengan isian keju creamy.", img: "https://images.unsplash.com/photo-1555507036-ab1f4038808a?q=80&w=1926&auto=format" },
-            { id: 14, name: "French Fries Truffle", price: "Rp 32.000", desc: "Kentang goreng dengan taburan truffle salt.", img: "https://images.unsplash.com/photo-1630384060421-cb20d0e0649d?q=80&w=1974&auto=format" },
-            { id: 15, name: "Spicy Nachos", price: "Rp 35.000", desc: "Nachos dengan saus keju pedas dan salsa.", img: "https://images.unsplash.com/photo-1513456852971-30c0b8199ebe?q=80&w=1974&auto=format" },
-            { id: 16, name: "Chicken Popcorn", price: "Rp 29.000", desc: "Potongan ayam gurih dengan saus sambal matah.", img: "https://images.unsplash.com/photo-1626645738196-c2a7c87a8f58?q=80&w=1974&auto=format" },
-            { id: 17, name: "Mozzarella Sticks", price: "Rp 34.000", desc: "Stik mozzarella goreng dengan saus marinara.", img: "https://images.unsplash.com/photo-1628260412299-a337ff6502b0?q=80&w=1974&auto=format" }
+            { id: 13, name: "Cheese Croissant", price: "Rp 27.000", desc: "Pastry renyah dengan isian keju creamy.", img: "foto/2.png" },
+            { id: 14, name: "French Fries Truffle", price: "Rp 32.000", desc: "Kentang goreng dengan taburan truffle salt.", img: "foto/2.png" },
+            { id: 15, name: "Spicy Nachos", price: "Rp 35.000", desc: "Nachos dengan saus keju pedas dan salsa.", img: "foto/2.png" },
+            { id: 16, name: "Chicken Popcorn", price: "Rp 29.000", desc: "Potongan ayam gurih dengan saus sambal matah.", img: "foto/2.png" },
+            { id: 17, name: "Mozzarella Sticks", price: "Rp 34.000", desc: "Stik mozzarella goreng dengan saus marinara.", img: "foto/2.png" }
         ],
         maincourse: [
-            { id: 18, name: "Avocado Toast", price: "Rp 42.000", desc: "Roti sourdough, alpukat, sunny side up.", img: "https://images.unsplash.com/photo-1603046891744-1f76eb10c1a2?q=80&w=2070&auto=format" },
-            { id: 19, name: "Chicken Basil Pasta", price: "Rp 48.000", desc: "Spaghetti dengan ayam panggang, kemangi, dan saus krim.", img: "https://images.unsplash.com/photo-1551183053-bf91a1d81141?q=80&w=1974&auto=format" },
-            { id: 20, name: "Nasi Goreng Pedas", price: "Rp 45.000", desc: "Nasi goreng dengan ayam suwir, telur mata sapi.", img: "https://images.unsplash.com/photo-1604907972745-e0a6fc19e7e6?q=80&w=1974&auto=format" },
-            { id: 21, name: "Beef Burger", price: "Rp 55.000", desc: "Burger daging sapi, keju leleh, saus spesial.", img: "https://images.unsplash.com/photo-1571091718767-18b5b1457add?q=80&w=1974&auto=format" },
-            { id: 22, name: "Grilled Salmon Rice Bowl", price: "Rp 68.000", desc: "Salmon panggang, nasi hangat, sayuran segar.", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=1974&auto=format" },
-            { id: 23, name: "Chicken Katsu Don", price: "Rp 52.000", desc: "Nasi dengan ayam katsu, telur, dan saus khas.", img: "https://images.unsplash.com/photo-1626668893632-6f1a39c6c7c9?q=80&w=1974&auto=format" }
+            { id: 18, name: "Avocado Toast", price: "Rp 42.000", desc: "Roti sourdough, alpukat, sunny side up.", img: "foto/2.png" },
+            { id: 19, name: "Chicken Basil Pasta", price: "Rp 48.000", desc: "Spaghetti dengan ayam panggang, kemangi, dan saus krim.", img: "foto/2.png"},
+            { id: 20, name: "Nasi Goreng Pedas", price: "Rp 45.000", desc: "Nasi goreng dengan ayam suwir, telur mata sapi.", img: "foto/2.png" },
+            { id: 21, name: "Beef Burger", price: "Rp 55.000", desc: "Burger daging sapi, keju leleh, saus spesial.", img: "foto/2.png" },
+            { id: 22, name: "Grilled Salmon Rice Bowl", price: "Rp 68.000", desc: "Salmon panggang, nasi hangat, sayuran segar.", img: "foto/2.png"},
+            { id: 23, name: "Chicken Katsu Don", price: "Rp 52.000", desc: "Nasi dengan ayam katsu, telur, dan saus khas.", img: "foto/2.png" }
         ],
         dessert: [
             { id: 24, name: "Classic Tiramisu", price: "Rp 39.000", desc: "Ladyfinger, mascarpone, kopi bubuk klasik.", img: "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?q=80&w=1964&auto=format" },
@@ -373,27 +453,41 @@
             </div>
         `;
     }
-
     function renderSubcategory(categoryKey, items, container) {
-        const titles = {
-            coffee: "☕ Coffee", noncoffee: "🍵 Non Coffee",
-            snack: "🍟 Snack", maincourse: "🍝 Main Course", dessert: "🍰 Dessert"
-        };
-        
-        const itemsHtml = items.map(item => renderCard(item)).join('');
-        
-        const sectionHtml = `
-            <div class="subcategory-group" data-cat="${categoryKey}">
-                <div class="subcategory-header">
-                    <h3 class="subcategory-title">${titles[categoryKey]}</h3>
+    const titles = {
+        coffee: " Coffee",
+        noncoffee: " Non Coffee",
+        snack: " Snack",
+        maincourse: " Main Course",
+        dessert: " Dessert"
+    };
+
+    const itemsHtml = items.map(item => renderCard(item)).join('');
+
+    const sectionHtml = `
+        <div class="subcategory-group" data-cat="${categoryKey}">
+            <div class="subcategory-header">
+                <h3 class="subcategory-title">${titles[categoryKey]}</h3>
+            </div>
+
+            <div class="subcategory-wrapper">
+                <div class="scroll-arrow scroll-left">
+                    <i class="fas fa-chevron-left"></i>
                 </div>
+
                 <div class="subcategory-scroll">
                     ${itemsHtml}
                 </div>
+
+                <div class="scroll-arrow scroll-right">
+                    <i class="fas fa-chevron-right"></i>
+                </div>
             </div>
-        `;
-        container.insertAdjacentHTML('beforeend', sectionHtml);
-    }
+        </div>
+    `;
+
+    container.insertAdjacentHTML('beforeend', sectionHtml);
+}
     
     function attachOrderEvents() {
         document.querySelectorAll('.order-btn').forEach(btn => {
@@ -403,6 +497,27 @@
             };
         });
     }
+    function attachScrollButtons() {
+    document.querySelectorAll('.subcategory-wrapper').forEach(wrapper => {
+        const scrollContainer = wrapper.querySelector('.subcategory-scroll');
+        const leftBtn = wrapper.querySelector('.scroll-left');
+        const rightBtn = wrapper.querySelector('.scroll-right');
+
+        leftBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: -300,
+                behavior: 'smooth'
+            });
+        });
+
+        rightBtn.addEventListener('click', () => {
+            scrollContainer.scrollBy({
+                left: 300,
+                behavior: 'smooth'
+            });
+        });
+    });
+}
     
     function renderFullMenuByTab(tab) {
         const container = document.getElementById("dynamic-menu-container");
@@ -419,6 +534,7 @@
         }
         
         attachOrderEvents();
+        attachScrollButtons();
         
         document.querySelectorAll('.subcategory-group, .menu-card').forEach(el => {
             if (!el.classList.contains('scroll-reveal')) el.classList.add('scroll-reveal');

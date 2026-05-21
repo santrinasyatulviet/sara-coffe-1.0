@@ -423,6 +423,13 @@
 
         /* Mobile landscape & tablet */
         @media (max-width: 768px) {
+              .subcategory-scroll {
+        scroll-padding-left: 16px;
+    }
+
+    .subcategory-scroll .menu-card {
+        flex: 0 0 85%;
+    }
             .navbar {
                 padding: 14px 20px;
             }
