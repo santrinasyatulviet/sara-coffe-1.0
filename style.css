@@ -510,8 +510,8 @@
                 height: 2.2rem;
             }
             .hero {
-                padding-top: 70px;
-                min-height: 100vh;
+                padding-top: 0px;
+                min-height: 110vh;
             }
             .hero-title {
                 font-size: 1.8rem;
